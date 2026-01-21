@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be Mine? 💕</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Game Container -->
+    <div id="gameWindow">
+        <!-- Start Screen -->
+        <div id="startScreen" class="screen active">
+            <div class="hearts-background"></div>
+            <h1 class="game-title">BE MINE?</h1>
+            <button id="startButton" class="pixel-button start-btn">
+                <span>START</span>
+            </button>
+            <p class="instruction">Press SPACE or Click to Start</p>
+        </div>
+
+        <!-- Name Entry Screen -->
+        <div id="nameScreen" class="screen">
+            <div class="name-container">
+                <h2 class="pixel-text">What's your name?</h2>
+                <input type="text" id="nameInput" class="pixel-input" maxlength="20" placeholder="Enter your name...">
+                <button id="enterButton" class="enter-key-button">
+                    <span class="enter-text">ENTER</span>
+                    <span class="enter-symbol">⏎</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Room Screen -->
+        <div id="roomScreen" class="screen">
+            <div class="room-container">
+                <h3 class="room-title">Click around to explore...</h3>
+                <div class="room-objects">
+                    <!-- Clickable objects will be positioned absolutely -->
+                    <img src="images/imms-character.png" alt="Imms" class="clickable-object" id="immsCharacter"
+                        data-object="imms">
+                    <img src="images/picture-frame.png" alt="Picture Frame" class="clickable-object" id="pictureFrame"
+                        data-object="picture">
+                    <img src="images/plushies.png" alt="Blue Whale and Purple Octopus" class="clickable-object" id="plushies"
+                        data-object="plushies">
+                    <img src="images/gregory-grasshopper.png" alt="Gregory the Grasshopper" class="clickable-object" id="gregoryGrasshopper"
+                        data-object="gregory">
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialog Screen (Visual Novel Style) -->
+        <div id="dialogScreen" class="screen">
+            <div class="blurred-background"></div>
+            <div class="character-focus">
+                <img src="images/imms-character.png" alt="Imms" id="immsDialog">
+            </div>
+            <div class="dialog-box">
+                <div class="dialog-name">Imms</div>
+                <div class="dialog-text" id="dialogText"></div>
+                <button id="continueButton" class="pixel-button">Continue</button>
+            </div>
+        </div>
+
+        <!-- Choice Modal -->
+        <div id="choiceModal" class="modal">
+            <div class="modal-content">
+                <h2 class="choice-question" id="choiceQuestion">Will you be my Valentine?</h2>
+                <div class="choice-buttons">
+                    <button id="yesButton" class="pixel-button yes-btn">YES</button>
+                    <button id="noButton" class="pixel-button no-btn">NO</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sad Ending Screen -->
+        <div id="sadEndingScreen" class="screen">
+            <video id="sadBridgeVideo" class="sad-video" muted playsinline>
+                <source src="videos/sad-bridge.mp4" type="video/mp4">
+            </video>
+            <div id="sadTextContainer" class="sad-text-container hidden">
+                <p id="typedText" class="typed-text"></p>
+            </div>
+            <div id="badEndingText" class="bad-ending-text hidden">BAD ENDING</div>
+        </div>
+
+        <!-- Happy Ending Screen -->
+        <div id="happyEndingScreen" class="screen">
+            <div id="slideshow1" class="slideshow-image hidden">
+                <img src="images/imms-flowers.png" alt="Imms with flowers">
+            </div>
+            <div id="slideshow2" class="slideshow-image hidden">
+                <img src="images/imms-both-gifts.png" alt="Imms with gifts">
+            </div>
+            <div id="celebrationImage" class="celebration-image hidden">
+                <img src="images/celebration.png" alt="Celebration">
+            </div>
+            <div id="happyTextContainer" class="happy-text-container hidden">
+                <p id="happyTypedText" class="typed-text"></p>
+            </div>
+            <div id="goodEndingText" class="good-ending-text hidden">GOOD ENDING</div>
+        </div>
+
+        <!-- Bonus Scene -->
+        <div id="bonusScene" class="screen">
+            <div id="bonusUnlocked" class="bonus-unlocked hidden">
+                <h2 class="bonus-title">Bonus Scene Unlocked!</h2>
+            </div>
+            <div id="gregoryWatch" class="gregory-watch-container hidden">
+                <img src="images/gregory-watch.png" alt="Gregory Watch" class="gregory-watch-image">
+                <div class="bonus-dialog-box">
+                    <p id="bonusDialogText" class="bonus-dialog-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gregory Meme Screen -->
+        <div id="gregoryScreen" class="screen">
+            <video id="gregoryVideo" class="gregory-video" playsinline>
+                <source src="videos/gregory-meme.mp4" type="video/mp4">
+            </video>
+            <div id="goodEndingText" class="good-ending-text hidden">GOOD ENDING</div>
+        </div>
+
+        <!-- Item Focus Overlay -->
+        <div id="itemFocusOverlay" class="item-focus-overlay hidden">
+            <div class="focus-content">
+                <img id="focusedItem" src="" alt="Focused Item" class="focused-item-image">
+                <div class="focus-message" id="focusMessage"></div>
+                <button id="closeFocusButton" class="pixel-button close-focus-btn">Back</button>
+            </div>
+        </div>
+
+        <!-- Music Player UI -->
+        <div id="musicPlayer" class="music-player">
+            <div class="player-left">
+                <button id="togglePlayerButton" class="toggle-player-button">
+                    <span class="toggle-icon">◀</span>
+                </button>
+                <div class="music-info">
+                    <span class="music-icon">♪</span>
+                    <span id="currentSong" class="song-name">Start Menu Theme</span>
+                </div>
+            </div>
+            <button id="muteButton" class="mute-button">
+                <span class="mute-icon">♫</span>
+            </button>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="startJazz" loop autoplay>
+        <source src="audio/smooth-jazz-start.mp3" type="audio/mp3">
+    </audio>
+    <audio id="mainJazz" loop>
+        <source src="audio/smooth-jazz-main.mp3" type="audio/mp3">
+    </audio>
+    <audio id="heartbeat" loop>
+        <source src="audio/heartbeat.mp3" type="audio/mp3">
+    </audio>
+    <audio id="sadJazz" loop>
+        <source src="audio/sad-jazz.mp3" type="audio/mp3">
+    </audio>
+    <audio id="celebrationMusic">
+        <source src="audio/smooth-jazz-start.mp3" type="audio/mp3">
+    </audio>
+    <audio id="buttonClick">
+        <source src="audio/button.mp3" type="audio/mp3">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
