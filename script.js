@@ -380,11 +380,19 @@ function showItemFocus(imageSrc, message) {
 // Photo Album functionality
 let currentAlbumPage = 0;
 const albumPhotos = [
-    'images/us-1.png', 'images/us-2.png',
-    'images/us-3.png', 'images/us-4.png',
-    'images/us-5.png', 'images/us-6.png',
-    'images/us-7.png', 'images/us-8.png',
-    'images/us-9.png'
+    { src: 'images/us-1.png', note: 'Us on a date at Spur...' },
+    { src: 'images/us-2.png', note: 'That day we spent at the Trampoline Park. Your smile made the tiredness disappear.' },
+    { src: 'images/us-3.png', note: 'Remember when we tried The Noodle Bar together? What a delicious Experience!' },
+    { src: 'images/us-4.png', note: 'The outcomes of Ragebaiting. My favorite way to spend an evening fr, the look on your face was priceless.' },
+    { src: 'images/us-5.png', note: 'This was taken when we went to Rocomammas for the first time.' },
+    { src: 'images/us-6.png', note: 'Random Picture Taken by your friends after we came back from Inno\'s Birthday Lunch.' },
+    { src: 'images/us-7.png', note: 'Chilling in my room after sneaking you into Res with the Boys' },
+    { src: 'images/us-8.png', note: 'My Pretty Lady' },
+    { src: 'images/us-9.png', note: 'Picture taken from my Graduation day at my uncles\'s place' },
+    { src: 'images/us-10.png', note: 'Us at Inno\'s Birthday Lunch' },
+    { src: 'images/us-11.png', note: 'Random pic they snapped of us at my graduation' },
+    { src: 'images/us-12.png', note: 'At the Geotthe Institute for a valentines poetry night event' },
+    { src: 'images/us-13.png', note: 'My Girl enjoying her noodles' },
 ];
 
 function showAlbumFocus() {
@@ -430,16 +438,18 @@ function updateAlbumPages() {
     
     // Update left page
     if (leftIndex < albumPhotos.length) {
-        leftPageImg.src = albumPhotos[leftIndex];
+        leftPageImg.src = albumPhotos[leftIndex].src;
         leftPageImg.style.display = 'block';
+        leftPageImg.dataset.index = leftIndex;
     } else {
         leftPageImg.style.display = 'none';
     }
     
     // Update right page
     if (rightIndex < albumPhotos.length) {
-        rightPageImg.src = albumPhotos[rightIndex];
+        rightPageImg.src = albumPhotos[rightIndex].src;
         rightPageImg.style.display = 'block';
+        rightPageImg.dataset.index = rightIndex;
     } else {
         rightPageImg.style.display = 'none';
     }
@@ -450,6 +460,63 @@ function updateAlbumPages() {
     // Update button states
     prevBtn.disabled = currentAlbumPage === 0;
     nextBtn.disabled = currentAlbumPage >= totalPages - 1;
+}
+
+function showPhotoFullscreen(index) {
+    const photo = albumPhotos[index];
+    if (!photo) return;
+    
+    // Create fullscreen photo overlay
+    let photoOverlay = document.getElementById('photoFullscreenOverlay');
+    if (!photoOverlay) {
+        photoOverlay = document.createElement('div');
+        photoOverlay.id = 'photoFullscreenOverlay';
+        photoOverlay.className = 'photo-fullscreen-overlay';
+        
+        const content = document.createElement('div');
+        content.className = 'photo-fullscreen-content';
+        
+        const img = document.createElement('img');
+        img.id = 'fullscreenPhotoImage';
+        img.className = 'fullscreen-photo-image';
+        
+        const noteBox = document.createElement('div');
+        noteBox.className = 'photo-note-box';
+        
+        const noteText = document.createElement('p');
+        noteText.id = 'fullscreenPhotoNote';
+        noteText.className = 'photo-note-text';
+        noteBox.appendChild(noteText);
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'pixel-button close-photo-btn';
+        closeBtn.textContent = 'Back to Album';
+        closeBtn.onclick = closePhotoFullscreen;
+        
+        content.appendChild(img);
+        content.appendChild(noteBox);
+        content.appendChild(closeBtn);
+        photoOverlay.appendChild(content);
+        
+        document.getElementById('gameWindow').appendChild(photoOverlay);
+    }
+    
+    const img = document.getElementById('fullscreenPhotoImage');
+    const noteText = document.getElementById('fullscreenPhotoNote');
+    
+    img.src = photo.src;
+    noteText.textContent = photo.note;
+    
+    photoOverlay.classList.remove('hidden');
+    photoOverlay.style.display = 'flex';
+}
+
+function closePhotoFullscreen() {
+    const photoOverlay = document.getElementById('photoFullscreenOverlay');
+    if (photoOverlay) {
+        photoOverlay.classList.add('hidden');
+        photoOverlay.style.display = 'none';
+    }
 }
 
 function prevAlbumPage() {
@@ -1054,6 +1121,30 @@ function initGame() {
         nextPageBtn.addEventListener('click', () => {
             playButtonSound();
             nextAlbumPage();
+        });
+    }
+    
+    // Album photo click listeners
+    const leftPageImage = document.getElementById('leftPageImage');
+    const rightPageImage = document.getElementById('rightPageImage');
+    
+    if (leftPageImage) {
+        leftPageImage.addEventListener('click', () => {
+            playButtonSound();
+            const index = parseInt(leftPageImage.dataset.index);
+            if (!isNaN(index)) {
+                showPhotoFullscreen(index);
+            }
+        });
+    }
+    
+    if (rightPageImage) {
+        rightPageImage.addEventListener('click', () => {
+            playButtonSound();
+            const index = parseInt(rightPageImage.dataset.index);
+            if (!isNaN(index)) {
+                showPhotoFullscreen(index);
+            }
         });
     }
     

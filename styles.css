@@ -852,8 +852,8 @@ body::before {
 
 #gregoryGrasshopper {
     width: 60px;
-    height: 50px;
-    left: 100px;
+    height: 70px;
+    left: 50px;
     bottom: 80px;
 }
 
@@ -1065,6 +1065,82 @@ body::before {
     padding: 10px 25px;
     flex-shrink: 0;
     margin-top: -10px;
+}
+
+/* Album page images - clickable */
+.album-page img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.album-page img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1) drop-shadow(0 0 10px rgba(255, 105, 180, 0.8));
+}
+
+/* Photo Fullscreen Overlay */
+.photo-fullscreen-overlay {
+    position: absolute;
+    top: 36px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 36px);
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1700;
+}
+
+.photo-fullscreen-overlay.hidden {
+    display: none;
+}
+
+.photo-fullscreen-overlay:not(.hidden) {
+    display: flex;
+    animation: fadeInScreen 0.3s forwards;
+}
+
+.photo-fullscreen-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    max-height: calc(100% - 20px);
+    padding: 5px;
+}
+
+.fullscreen-photo-image {
+    max-width: 600px;
+    max-height: 380px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    animation: focusZoomIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.photo-note-box {
+    padding: 15px 25px;
+    max-width: 550px;
+}
+
+.photo-note-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #ffb3d9;
+    text-align: center;
+    line-height: 1.8;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.close-photo-btn {
+    font-size: 10px;
+    padding: 10px 25px;
 }
 
 /* Dialog Screen */
