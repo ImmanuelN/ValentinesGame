@@ -356,6 +356,9 @@ function handleObjectClick(objectType) {
         // Show Gregory video in focus view - Easter egg!
         gameState.gregoryFound = true;
         showGregoryVideo();
+    } else if (objectType === 'album') {
+        // Show photo album in focus view with open option
+        showAlbumFocus();
     } else {
         // Optional: Add small interactions for other objects
         console.log(`Clicked on ${objectType}`);
@@ -366,10 +369,102 @@ function showItemFocus(imageSrc, message) {
     const overlay = document.getElementById('itemFocusOverlay');
     const focusedItem = document.getElementById('focusedItem');
     const focusMessage = document.getElementById('focusMessage');
+    const openAlbumBtn = document.getElementById('openAlbumButton');
     
     focusedItem.src = imageSrc;
     focusMessage.textContent = message;
+    openAlbumBtn.classList.add('hidden');
     overlay.classList.remove('hidden');
+}
+
+// Photo Album functionality
+let currentAlbumPage = 0;
+const albumPhotos = [
+    'images/us-1.png', 'images/us-2.png',
+    'images/us-3.png', 'images/us-4.png',
+    'images/us-5.png', 'images/us-6.png',
+    'images/us-7.png', 'images/us-8.png',
+    'images/us-9.png'
+];
+
+function showAlbumFocus() {
+    const overlay = document.getElementById('itemFocusOverlay');
+    const focusedItem = document.getElementById('focusedItem');
+    const focusMessage = document.getElementById('focusMessage');
+    const openAlbumBtn = document.getElementById('openAlbumButton');
+    
+    focusedItem.src = 'images/photo-album.png';
+    focusMessage.textContent = 'A precious photo album filled with memories... Would you like to open it?';
+    openAlbumBtn.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+}
+
+function openAlbum() {
+    const overlay = document.getElementById('itemFocusOverlay');
+    const albumViewer = document.getElementById('albumViewer');
+    
+    overlay.classList.add('hidden');
+    albumViewer.classList.remove('hidden');
+    
+    currentAlbumPage = 0;
+    updateAlbumPages();
+}
+
+function closeAlbum() {
+    const albumViewer = document.getElementById('albumViewer');
+    
+    albumViewer.classList.add('hidden');
+    showAlbumFocus();
+}
+
+function updateAlbumPages() {
+    const leftPageImg = document.getElementById('leftPageImage');
+    const rightPageImg = document.getElementById('rightPageImage');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+    
+    const leftIndex = currentAlbumPage * 2;
+    const rightIndex = currentAlbumPage * 2 + 1;
+    const totalPages = Math.ceil(albumPhotos.length / 2);
+    
+    // Update left page
+    if (leftIndex < albumPhotos.length) {
+        leftPageImg.src = albumPhotos[leftIndex];
+        leftPageImg.style.display = 'block';
+    } else {
+        leftPageImg.style.display = 'none';
+    }
+    
+    // Update right page
+    if (rightIndex < albumPhotos.length) {
+        rightPageImg.src = albumPhotos[rightIndex];
+        rightPageImg.style.display = 'block';
+    } else {
+        rightPageImg.style.display = 'none';
+    }
+    
+    // Update page indicator
+    pageIndicator.textContent = `Page ${currentAlbumPage + 1} / ${totalPages}`;
+    
+    // Update button states
+    prevBtn.disabled = currentAlbumPage === 0;
+    nextBtn.disabled = currentAlbumPage >= totalPages - 1;
+}
+
+function prevAlbumPage() {
+    if (currentAlbumPage > 0) {
+        currentAlbumPage--;
+        updateAlbumPages();
+    }
+}
+
+function nextAlbumPage() {
+    const totalPages = Math.ceil(albumPhotos.length / 2);
+    if (currentAlbumPage < totalPages - 1) {
+        currentAlbumPage++;
+        updateAlbumPages();
+    }
 }
 
 function showGregoryVideo() {
@@ -929,6 +1024,39 @@ function initGame() {
         });
     }
     
+    // Initialize album buttons
+    const openAlbumButton = document.getElementById('openAlbumButton');
+    if (openAlbumButton) {
+        openAlbumButton.addEventListener('click', () => {
+            playButtonSound();
+            openAlbum();
+        });
+    }
+    
+    const closeAlbumBtn = document.getElementById('closeAlbumBtn');
+    if (closeAlbumBtn) {
+        closeAlbumBtn.addEventListener('click', () => {
+            playButtonSound();
+            closeAlbum();
+        });
+    }
+    
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+            playButtonSound();
+            prevAlbumPage();
+        });
+    }
+    
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+            playButtonSound();
+            nextAlbumPage();
+        });
+    }
+    
     // Desktop icon event listener - single click to open
     const valentineGameIcon = document.getElementById('valentineGameIcon');
     if (valentineGameIcon) {
@@ -1227,7 +1355,18 @@ const fileSystem = {
                     'room-background.png': { type: 'file', category: 'image' },
                     'celebration.png': { type: 'file', category: 'image' },
                     'gregory-grasshopper.png': { type: 'file', category: 'image' },
-                    'gregory-watch.png': { type: 'file', category: 'image' }
+                    'gregory-watch.png': { type: 'file', category: 'image' },
+                    'photo-album.png': { type: 'file', category: 'image' },
+                    'photo-album-open.png': { type: 'file', category: 'image' },
+                    'us-1.png': { type: 'file', category: 'image' },
+                    'us-2.png': { type: 'file', category: 'image' },
+                    'us-3.png': { type: 'file', category: 'image' },
+                    'us-4.png': { type: 'file', category: 'image' },
+                    'us-5.png': { type: 'file', category: 'image' },
+                    'us-6.png': { type: 'file', category: 'image' },
+                    'us-7.png': { type: 'file', category: 'image' },
+                    'us-8.png': { type: 'file', category: 'image' },
+                    'us-9.png': { type: 'file', category: 'image' }
                 }
             },
             'videos': {

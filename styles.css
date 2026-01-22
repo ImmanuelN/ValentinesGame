@@ -857,6 +857,20 @@ body::before {
     bottom: 80px;
 }
 
+#photoAlbum {
+    width: 160px;
+    height: 160px;
+    right: 90px;
+    bottom: 30px;
+}
+
+#photoAlbum:hover {
+    transform: scale(1.05);
+    filter: 
+        drop-shadow(0 0 20px rgba(255, 105, 180, 1))
+        brightness(1.1);
+}
+
 /* Item Focus Overlay */
 .item-focus-overlay {
     position: absolute;
@@ -926,9 +940,131 @@ body::before {
     box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
 }
 
+.focus-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
 .close-focus-btn {
     font-size: 12px;
     padding: 12px 30px;
+}
+
+.open-album-btn {
+    font-size: 12px;
+    padding: 12px 30px;
+    background: linear-gradient(180deg, #ffb3d9 0%, #ff80bf 100%);
+}
+
+.open-album-btn:hover {
+    background: linear-gradient(180deg, #ffd9ec 0%, #ffb3d9 100%);
+}
+
+/* Photo Album Viewer */
+.album-viewer {
+    position: absolute;
+    top: 36px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 36px);
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1600;
+}
+
+.album-viewer.hidden {
+    display: none;
+}
+
+.album-viewer:not(.hidden) {
+    display: flex;
+    animation: fadeInScreen 0.3s forwards;
+}
+
+.album-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    max-height: calc(100% - 20px);
+    padding: 5px;
+}
+
+.album-book-image {
+    width: 800px;
+    height: 520px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 10px 40px rgba(255, 105, 180, 0.5));
+    flex-shrink: 0;
+    margin-top: -30px;
+}
+
+.album-pages {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+    width: 420px;
+    height: 260px;
+    justify-content: center;
+    align-items: center;
+}
+
+.album-page {
+    width: 170px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.album-page img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.album-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: -100px;
+}
+
+.album-nav-btn {
+    font-size: 10px;
+    padding: 10px 20px;
+}
+
+.album-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-indicator {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #ffb3d9;
+    text-shadow: 2px 2px 0 #000;
+    min-width: 80px;
+    text-align: center;
+}
+
+.close-album-btn {
+    font-size: 10px;
+    padding: 10px 25px;
+    flex-shrink: 0;
+    margin-top: -10px;
 }
 
 /* Dialog Screen */

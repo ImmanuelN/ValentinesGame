@@ -94,6 +94,8 @@
                         data-object="plushies">
                     <img src="images/gregory-grasshopper.png" alt="Gregory the Grasshopper" class="clickable-object" id="gregoryGrasshopper"
                         data-object="gregory">
+                    <img src="images/photo-album.png" alt="Photo Album" class="clickable-object" id="photoAlbum"
+                        data-object="album">
                 </div>
             </div>
         </div>
@@ -176,7 +178,31 @@
             <div class="focus-content">
                 <img id="focusedItem" src="" alt="Focused Item" class="focused-item-image">
                 <div class="focus-message" id="focusMessage"></div>
-                <button id="closeFocusButton" class="pixel-button close-focus-btn">Back</button>
+                <div class="focus-buttons">
+                    <button id="closeFocusButton" class="pixel-button close-focus-btn">Back</button>
+                    <button id="openAlbumButton" class="pixel-button open-album-btn hidden">Open Album</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Album Viewer -->
+        <div id="albumViewer" class="album-viewer hidden">
+            <div class="album-content">
+                <img id="albumBook" src="images/photo-album-open.png" alt="Open Photo Album" class="album-book-image">
+                <div class="album-pages">
+                    <div class="album-page left-page">
+                        <img id="leftPageImage" src="" alt="Left Page Photo">
+                    </div>
+                    <div class="album-page right-page">
+                        <img id="rightPageImage" src="" alt="Right Page Photo">
+                    </div>
+                </div>
+                <div class="album-nav">
+                    <button id="prevPageBtn" class="pixel-button album-nav-btn">◀ Prev</button>
+                    <span id="pageIndicator" class="page-indicator">Page 1</span>
+                    <button id="nextPageBtn" class="pixel-button album-nav-btn">Next ▶</button>
+                </div>
+                <button id="closeAlbumBtn" class="pixel-button close-album-btn">Close Album</button>
             </div>
         </div>
 
