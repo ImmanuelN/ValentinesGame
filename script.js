@@ -1,3 +1,22 @@
+// Mobile Device Detection
+function checkMobileDevice() {
+    const mobileWarning = document.getElementById('mobileWarning');
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isSmallScreen = window.innerWidth < 900 || window.innerHeight < 600;
+    
+    if (isMobile || isSmallScreen) {
+        mobileWarning.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    } else {
+        mobileWarning.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+}
+
+// Check on load and resize
+window.addEventListener('load', checkMobileDevice);
+window.addEventListener('resize', checkMobileDevice);
+
 // Image Preloader - Load all images when page starts
 const imagesToPreload = [
     'images/celebration.png',
@@ -28,7 +47,11 @@ const imagesToPreload = [
     'images/us-10.png',
     'images/us-11.png',
     'images/us-12.png',
-    'images/us-13.png'
+    'images/us-13.png',
+    'images/us-14.png',
+    'images/us-15.png',
+    'images/us-16.png',
+    'images/us-17.png'
 ];
 
 const preloadedImages = [];
@@ -439,6 +462,10 @@ const albumPhotos = [
     { src: 'images/us-11.png', note: 'Random pic they snapped of us at my graduation' },
     { src: 'images/us-12.png', note: 'At the Geotthe Institute for a valentines poetry night event' },
     { src: 'images/us-13.png', note: 'My Girl enjoying her noodles' },
+    { src: 'images/us-14.png', note: 'My Lady at Rocomamas looking beautiful' },
+    { src: 'images/us-15.png', note: 'Love it when she sends me selfies fr, phenomenal beauty' },
+    { src: 'images/us-16.png', note: 'Truly my other half' },
+    { src: 'images/us-17.png', note: '👉👈' }
 ];
 
 function showAlbumFocus() {
