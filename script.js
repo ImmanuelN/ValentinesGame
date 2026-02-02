@@ -1530,7 +1530,15 @@ const fileSystem = {
                     'us-6.png': { type: 'file', category: 'image' },
                     'us-7.png': { type: 'file', category: 'image' },
                     'us-8.png': { type: 'file', category: 'image' },
-                    'us-9.png': { type: 'file', category: 'image' }
+                    'us-9.png': { type: 'file', category: 'image' },
+                    'us-10.png': { type: 'file', category: 'image' },
+                    'us-11.png': { type: 'file', category: 'image' },
+                    'us-12.png': { type: 'file', category: 'image' },
+                    'us-13.png': { type: 'file', category: 'image' },
+                    'us-14.png': { type: 'file', category: 'image' },
+                    'us-15.png': { type: 'file', category: 'image' },
+                    'us-16.png': { type: 'file', category: 'image' },
+                    'us-17.png': { type: 'file', category: 'image' }
                 }
             },
             'videos': {
