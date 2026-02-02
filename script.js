@@ -18,6 +18,7 @@ const audio = {
 
 // Screen Elements
 const screens = {
+    intro: document.getElementById('introScreen'),
     start: document.getElementById('startScreen'),
     name: document.getElementById('nameScreen'),
     room: document.getElementById('roomScreen'),
@@ -355,6 +356,9 @@ function handleObjectClick(objectType) {
         // Show Gregory video in focus view - Easter egg!
         gameState.gregoryFound = true;
         showGregoryVideo();
+    } else if (objectType === 'album') {
+        // Show photo album in focus view with open option
+        showAlbumFocus();
     } else {
         // Optional: Add small interactions for other objects
         console.log(`Clicked on ${objectType}`);
@@ -365,10 +369,169 @@ function showItemFocus(imageSrc, message) {
     const overlay = document.getElementById('itemFocusOverlay');
     const focusedItem = document.getElementById('focusedItem');
     const focusMessage = document.getElementById('focusMessage');
+    const openAlbumBtn = document.getElementById('openAlbumButton');
     
     focusedItem.src = imageSrc;
     focusMessage.textContent = message;
+    openAlbumBtn.classList.add('hidden');
     overlay.classList.remove('hidden');
+}
+
+// Photo Album functionality
+let currentAlbumPage = 0;
+const albumPhotos = [
+    { src: 'images/us-1.png', note: 'Us on a date at Spur...' },
+    { src: 'images/us-2.png', note: 'That day we spent at the Trampoline Park. Your smile made the tiredness disappear.' },
+    { src: 'images/us-3.png', note: 'Remember when we tried The Noodle Bar together? What a delicious Experience!' },
+    { src: 'images/us-4.png', note: 'The outcomes of Ragebaiting. My favorite way to spend an evening fr, the look on your face was priceless.' },
+    { src: 'images/us-5.png', note: 'This was taken when we went to Rocomammas for the first time.' },
+    { src: 'images/us-6.png', note: 'Random Picture Taken by your friends after we came back from Inno\'s Birthday Lunch.' },
+    { src: 'images/us-7.png', note: 'Chilling in my room after sneaking you into Res with the Boys' },
+    { src: 'images/us-8.png', note: 'My Pretty Lady' },
+    { src: 'images/us-9.png', note: 'Picture taken from my Graduation day at my uncles\'s place' },
+    { src: 'images/us-10.png', note: 'Us at Inno\'s Birthday Lunch' },
+    { src: 'images/us-11.png', note: 'Random pic they snapped of us at my graduation' },
+    { src: 'images/us-12.png', note: 'At the Geotthe Institute for a valentines poetry night event' },
+    { src: 'images/us-13.png', note: 'My Girl enjoying her noodles' },
+];
+
+function showAlbumFocus() {
+    const overlay = document.getElementById('itemFocusOverlay');
+    const focusedItem = document.getElementById('focusedItem');
+    const focusMessage = document.getElementById('focusMessage');
+    const openAlbumBtn = document.getElementById('openAlbumButton');
+    
+    focusedItem.src = 'images/photo-album.png';
+    focusMessage.textContent = 'A precious photo album filled with memories... Would you like to open it?';
+    openAlbumBtn.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+}
+
+function openAlbum() {
+    const overlay = document.getElementById('itemFocusOverlay');
+    const albumViewer = document.getElementById('albumViewer');
+    
+    overlay.classList.add('hidden');
+    albumViewer.classList.remove('hidden');
+    
+    currentAlbumPage = 0;
+    updateAlbumPages();
+}
+
+function closeAlbum() {
+    const albumViewer = document.getElementById('albumViewer');
+    
+    albumViewer.classList.add('hidden');
+    showAlbumFocus();
+}
+
+function updateAlbumPages() {
+    const leftPageImg = document.getElementById('leftPageImage');
+    const rightPageImg = document.getElementById('rightPageImage');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+    
+    const leftIndex = currentAlbumPage * 2;
+    const rightIndex = currentAlbumPage * 2 + 1;
+    const totalPages = Math.ceil(albumPhotos.length / 2);
+    
+    // Update left page
+    if (leftIndex < albumPhotos.length) {
+        leftPageImg.src = albumPhotos[leftIndex].src;
+        leftPageImg.style.display = 'block';
+        leftPageImg.dataset.index = leftIndex;
+    } else {
+        leftPageImg.style.display = 'none';
+    }
+    
+    // Update right page
+    if (rightIndex < albumPhotos.length) {
+        rightPageImg.src = albumPhotos[rightIndex].src;
+        rightPageImg.style.display = 'block';
+        rightPageImg.dataset.index = rightIndex;
+    } else {
+        rightPageImg.style.display = 'none';
+    }
+    
+    // Update page indicator
+    pageIndicator.textContent = `Page ${currentAlbumPage + 1} / ${totalPages}`;
+    
+    // Update button states
+    prevBtn.disabled = currentAlbumPage === 0;
+    nextBtn.disabled = currentAlbumPage >= totalPages - 1;
+}
+
+function showPhotoFullscreen(index) {
+    const photo = albumPhotos[index];
+    if (!photo) return;
+    
+    // Create fullscreen photo overlay
+    let photoOverlay = document.getElementById('photoFullscreenOverlay');
+    if (!photoOverlay) {
+        photoOverlay = document.createElement('div');
+        photoOverlay.id = 'photoFullscreenOverlay';
+        photoOverlay.className = 'photo-fullscreen-overlay';
+        
+        const content = document.createElement('div');
+        content.className = 'photo-fullscreen-content';
+        
+        const img = document.createElement('img');
+        img.id = 'fullscreenPhotoImage';
+        img.className = 'fullscreen-photo-image';
+        
+        const noteBox = document.createElement('div');
+        noteBox.className = 'photo-note-box';
+        
+        const noteText = document.createElement('p');
+        noteText.id = 'fullscreenPhotoNote';
+        noteText.className = 'photo-note-text';
+        noteBox.appendChild(noteText);
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'pixel-button close-photo-btn';
+        closeBtn.textContent = 'Back to Album';
+        closeBtn.onclick = closePhotoFullscreen;
+        
+        content.appendChild(img);
+        content.appendChild(noteBox);
+        content.appendChild(closeBtn);
+        photoOverlay.appendChild(content);
+        
+        document.getElementById('gameWindow').appendChild(photoOverlay);
+    }
+    
+    const img = document.getElementById('fullscreenPhotoImage');
+    const noteText = document.getElementById('fullscreenPhotoNote');
+    
+    img.src = photo.src;
+    noteText.textContent = photo.note;
+    
+    photoOverlay.classList.remove('hidden');
+    photoOverlay.style.display = 'flex';
+}
+
+function closePhotoFullscreen() {
+    const photoOverlay = document.getElementById('photoFullscreenOverlay');
+    if (photoOverlay) {
+        photoOverlay.classList.add('hidden');
+        photoOverlay.style.display = 'none';
+    }
+}
+
+function prevAlbumPage() {
+    if (currentAlbumPage > 0) {
+        currentAlbumPage--;
+        updateAlbumPages();
+    }
+}
+
+function nextAlbumPage() {
+    const totalPages = Math.ceil(albumPhotos.length / 2);
+    if (currentAlbumPage < totalPages - 1) {
+        currentAlbumPage++;
+        updateAlbumPages();
+    }
 }
 
 function showGregoryVideo() {
@@ -466,7 +629,7 @@ function startDialog() {
     showNextDialog();
 }
 
-function showNextDialog() {
+async function showNextDialog() {
     const dialogText = document.getElementById('dialogText');
     const continueButton = document.getElementById('continueButton');
     
@@ -480,11 +643,17 @@ function showNextDialog() {
     if (currentDialogIndex < messages.length) {
         const message = messages[currentDialogIndex];
         
-        typeWriter(dialogText, message, 30);
+        // Hide and disable continue button while typing
+        continueButton.style.visibility = 'hidden';
+        continueButton.disabled = true;
+        
+        // Wait for typing to complete
+        await typeWriter(dialogText, message, 30);
         currentDialogIndex++;
         
-        // Show continue button after typing
+        // Show and enable continue button after typing is done
         continueButton.style.visibility = 'visible';
+        continueButton.disabled = false;
     } else {
         if (dialogMode === 'initial') {
             // All initial dialogs shown, show the choice modal
@@ -896,16 +1065,22 @@ function initGame() {
     musicPlayer.toggleButton = document.getElementById('togglePlayerButton');
     
     // Add mute button event listener
-    musicPlayer.muteButton.addEventListener('click', () => {
-        playButtonSound();
-        toggleMute();
-    });
+    if (musicPlayer.muteButton) {
+        musicPlayer.muteButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playButtonSound();
+            toggleMute();
+        });
+    }
     
     // Add toggle button event listener
-    musicPlayer.toggleButton.addEventListener('click', () => {
-        playButtonSound();
-        toggleMusicPlayer();
-    });
+    if (musicPlayer.toggleButton) {
+        musicPlayer.toggleButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playButtonSound();
+            toggleMusicPlayer();
+        });
+    }
     
     // Initialize item focus overlay close button
     const closeFocusButton = document.getElementById('closeFocusButton');
@@ -916,28 +1091,572 @@ function initGame() {
         });
     }
     
-    // Add button click sound to all buttons
-    document.querySelectorAll('button, .pixel-button').forEach(button => {
-        button.addEventListener('click', () => {
+    // Initialize album buttons
+    const openAlbumButton = document.getElementById('openAlbumButton');
+    if (openAlbumButton) {
+        openAlbumButton.addEventListener('click', () => {
             playButtonSound();
+            openAlbum();
         });
-    });
+    }
     
-    // Show music player initially
-    showMusicPlayer();
+    const closeAlbumBtn = document.getElementById('closeAlbumBtn');
+    if (closeAlbumBtn) {
+        closeAlbumBtn.addEventListener('click', () => {
+            playButtonSound();
+            closeAlbum();
+        });
+    }
     
-    initStartScreen();
-    initNameScreen();
-    initRoomScreen();
-    initDialogScreen();
-    initChoiceModal();
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+            playButtonSound();
+            prevAlbumPage();
+        });
+    }
     
-    // Set initial screen
-    switchScreen('start');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+            playButtonSound();
+            nextAlbumPage();
+        });
+    }
+    
+    // Album photo click listeners
+    const leftPageImage = document.getElementById('leftPageImage');
+    const rightPageImage = document.getElementById('rightPageImage');
+    
+    if (leftPageImage) {
+        leftPageImage.addEventListener('click', () => {
+            playButtonSound();
+            const index = parseInt(leftPageImage.dataset.index);
+            if (!isNaN(index)) {
+                showPhotoFullscreen(index);
+            }
+        });
+    }
+    
+    if (rightPageImage) {
+        rightPageImage.addEventListener('click', () => {
+            playButtonSound();
+            const index = parseInt(rightPageImage.dataset.index);
+            if (!isNaN(index)) {
+                showPhotoFullscreen(index);
+            }
+        });
+    }
+    
+    // Desktop icon event listener - single click to open
+    const valentineGameIcon = document.getElementById('valentineGameIcon');
+    if (valentineGameIcon) {
+        valentineGameIcon.addEventListener('click', openGame);
+    }
 }
 
-// Start the game when page loads
-window.addEventListener('DOMContentLoaded', initGame);
+function openGame() {
+    const desktop = document.getElementById('desktop');
+    const gameWindow = document.getElementById('gameWindow');
+    
+    if (desktop && gameWindow) {
+        desktop.classList.add('hidden');
+        gameWindow.classList.remove('hidden');
+        
+        // Add button click sound to all game buttons
+        document.querySelectorAll('#gameWindow button, #gameWindow .pixel-button').forEach(button => {
+            button.addEventListener('click', () => {
+                playButtonSound();
+            });
+        });
+        
+        // Initialize game components (but don't start music yet)
+        initStartScreen();
+        initNameScreen();
+        initRoomScreen();
+        initDialogScreen();
+        initChoiceModal();
+        
+        // Start with intro sequence (music will start after intro)
+        startIntroSequence();
+    }
+}
+
+function startIntroSequence() {
+    const introScreen = document.getElementById('introScreen');
+    const studioLogo = document.getElementById('studioLogo');
+    const presentsText = document.getElementById('presentsText');
+    
+    // Show intro screen
+    switchScreen('intro');
+    
+    // Show studio logo with fade in
+    setTimeout(() => {
+        studioLogo.classList.remove('hidden');
+        studioLogo.classList.add('fade-in');
+        
+        // After 2 seconds, fade out logo
+        setTimeout(() => {
+            studioLogo.classList.remove('fade-in');
+            studioLogo.classList.add('fade-out');
+            
+            // Show "PRESENTS" text
+            setTimeout(() => {
+                studioLogo.classList.add('hidden');
+                presentsText.classList.remove('hidden');
+                presentsText.classList.add('fade-in');
+                
+                // After 2 seconds, fade out and go to start screen
+                setTimeout(() => {
+                    presentsText.classList.remove('fade-in');
+                    presentsText.classList.add('fade-out');
+                    
+                    setTimeout(() => {
+                        presentsText.classList.add('hidden');
+                        // Start the game music and show start screen
+                        playAudio(audio.startJazz);
+                        showMusicPlayer();
+                        switchScreen('start');
+                    }, 1500);
+                }, 2000);
+            }, 1500);
+        }, 2000);
+    }, 500);
+}
+
+function updateTaskbarTime() {
+    const taskbarTime = document.getElementById('taskbarTime');
+    if (taskbarTime) {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        taskbarTime.textContent = `${hours}:${minutes}`;
+    }
+}
+
+// Initialize desktop when page loads
+window.addEventListener('DOMContentLoaded', () => {
+    // Update taskbar time
+    updateTaskbarTime();
+    setInterval(updateTaskbarTime, 1000);
+    
+    // Initialize game components (but don't start)
+    initGame();
+    
+    // Initialize desktop applications
+    initDesktopApps();
+});
+
+// Desktop Applications
+function initDesktopApps() {
+    const gameCloseBtn = document.getElementById('windowCloseBtn');
+    const explorerCloseBtn = document.getElementById('explorerCloseBtn');
+    const viewerCloseBtn = document.getElementById('viewerCloseBtn');
+    const backButton = document.getElementById('backButton');
+    
+    // Close buttons
+    if (gameCloseBtn) {
+        gameCloseBtn.addEventListener('click', closeGame);
+    }
+    if (explorerCloseBtn) {
+        explorerCloseBtn.addEventListener('click', closeFileExplorer);
+    }
+    if (viewerCloseBtn) {
+        viewerCloseBtn.addEventListener('click', closeMediaViewer);
+    }
+    if (backButton) {
+        backButton.addEventListener('click', navigateBack);
+    }
+    
+    // Desktop icons - override only for non-game icons
+    const myFilesIcon = document.querySelectorAll('.desktop-icon')[1];
+    const musicIcon = document.querySelectorAll('.desktop-icon')[2];
+    const photosIcon = document.querySelectorAll('.desktop-icon')[3];
+    const videosIcon = document.querySelectorAll('.desktop-icon')[4];
+    
+    if (myFilesIcon) {
+        myFilesIcon.addEventListener('click', openMyFiles);
+    }
+    if (musicIcon) {
+        musicIcon.addEventListener('click', openMusic);
+    }
+    if (photosIcon) {
+        photosIcon.addEventListener('click', openPhotos);
+    }
+    if (videosIcon) {
+        videosIcon.addEventListener('click', openVideos);
+    }
+}
+
+function closeGame() {
+    const gameWindow = document.getElementById('gameWindow');
+    const desktop = document.getElementById('desktop');
+    
+    // Stop ALL audio
+    Object.values(audio).forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    
+    // Reset game state
+    gameState.playerName = '';
+    gameState.currentScreen = 'start';
+    gameState.dialogStep = 0;
+    gameState.gregoryFound = false;
+    currentDialogIndex = 0;
+    dialogMode = 'initial';
+    pausedAudio = null;
+    
+    // Collapse music player
+    if (musicPlayer.container) {
+        musicPlayer.container.classList.add('collapsed');
+    }
+    
+    // Reset all screens using the proper method
+    Object.values(screens).forEach(screen => {
+        if (screen) {
+            screen.classList.remove('active');
+        }
+    });
+    
+    // Reset intro screen elements
+    const studioLogo = document.getElementById('studioLogo');
+    const presentsText = document.getElementById('presentsText');
+    if (studioLogo) {
+        studioLogo.classList.add('hidden');
+        studioLogo.classList.remove('fade-in', 'fade-out');
+    }
+    if (presentsText) {
+        presentsText.classList.add('hidden');
+        presentsText.classList.remove('fade-in', 'fade-out');
+    }
+    
+    // Set intro as the active screen for next time
+    if (screens.intro) {
+        screens.intro.classList.add('active');
+    }
+    
+    // Hide choice modal
+    const choiceModal = document.getElementById('choiceModal');
+    if (choiceModal) {
+        choiceModal.classList.remove('active');
+    }
+    
+    // Hide item focus overlay
+    const itemFocusOverlay = document.getElementById('itemFocusOverlay');
+    if (itemFocusOverlay) {
+        itemFocusOverlay.classList.add('hidden');
+    }
+    
+    // Reset ending screen elements
+    const elementsToHide = [
+        'sadTextContainer', 'badEndingText', 'happyTextContainer', 
+        'goodEndingText', 'celebrationImage', 'slideshow1', 'slideshow2',
+        'bonusUnlocked', 'gregoryWatch'
+    ];
+    elementsToHide.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.add('hidden');
+            el.classList.remove('show', 'fade-in', 'fade-out');
+        }
+    });
+    
+    // Reset typed text
+    const typedText = document.getElementById('typedText');
+    const happyTypedText = document.getElementById('happyTypedText');
+    const bonusDialogText = document.getElementById('bonusDialogText');
+    if (typedText) typedText.textContent = '';
+    if (happyTypedText) happyTypedText.textContent = '';
+    if (bonusDialogText) bonusDialogText.textContent = '';
+    
+    // Reset videos
+    const sadBridgeVideo = document.getElementById('sadBridgeVideo');
+    const gregoryVideo = document.getElementById('gregoryVideo');
+    if (sadBridgeVideo) {
+        sadBridgeVideo.pause();
+        sadBridgeVideo.currentTime = 0;
+        sadBridgeVideo.classList.remove('fade-out');
+    }
+    if (gregoryVideo) {
+        gregoryVideo.pause();
+        gregoryVideo.currentTime = 0;
+        gregoryVideo.classList.remove('fade-out');
+    }
+    
+    // Reset name input
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput) {
+        nameInput.value = '';
+        nameInput.classList.remove('error');
+    }
+    
+    // Hide game, show desktop
+    gameWindow.classList.add('hidden');
+    desktop.classList.remove('hidden');
+}
+
+function closeFileExplorer() {
+    const fileExplorer = document.getElementById('fileExplorer');
+    fileExplorer.classList.add('hidden');
+}
+
+function closeMediaViewer() {
+    const mediaViewer = document.getElementById('mediaViewer');
+    const viewerContent = document.getElementById('viewerContent');
+    const audioControls = document.getElementById('audioControls');
+    
+    // Stop any playing media
+    const media = viewerContent.querySelector('audio, video');
+    if (media) {
+        media.pause();
+        media.currentTime = 0;
+    }
+    
+    // Clear content
+    viewerContent.innerHTML = '';
+    audioControls.classList.add('hidden');
+    
+    mediaViewer.classList.add('hidden');
+}
+
+// File System Structure
+const fileSystem = {
+    'My Files': {
+        type: 'root',
+        children: {
+            'audio': {
+                type: 'folder',
+                children: {
+                    'smooth-jazz-start.mp3': { type: 'file', category: 'audio' },
+                    'smooth-jazz-main.mp3': { type: 'file', category: 'audio' },
+                    'sad-jazz.mp3': { type: 'file', category: 'audio' }
+                }
+            },
+            'images': {
+                type: 'folder',
+                children: {
+                    'imms-character.png': { type: 'file', category: 'image' },
+                    'imms-both-gifts.png': { type: 'file', category: 'image' },
+                    'imms-flowers.png': { type: 'file', category: 'image' },
+                    'picture-frame.png': { type: 'file', category: 'image' },
+                    'plushies.png': { type: 'file', category: 'image' },
+                    'room-background.png': { type: 'file', category: 'image' },
+                    'celebration.png': { type: 'file', category: 'image' },
+                    'gregory-grasshopper.png': { type: 'file', category: 'image' },
+                    'gregory-watch.png': { type: 'file', category: 'image' },
+                    'photo-album.png': { type: 'file', category: 'image' },
+                    'photo-album-open.png': { type: 'file', category: 'image' },
+                    'us-1.png': { type: 'file', category: 'image' },
+                    'us-2.png': { type: 'file', category: 'image' },
+                    'us-3.png': { type: 'file', category: 'image' },
+                    'us-4.png': { type: 'file', category: 'image' },
+                    'us-5.png': { type: 'file', category: 'image' },
+                    'us-6.png': { type: 'file', category: 'image' },
+                    'us-7.png': { type: 'file', category: 'image' },
+                    'us-8.png': { type: 'file', category: 'image' },
+                    'us-9.png': { type: 'file', category: 'image' }
+                }
+            },
+            'videos': {
+                type: 'folder',
+                children: {
+                    'sad-bridge.mp4': { type: 'file', category: 'video' },
+                    'gregory-meme.mp4': { type: 'file', category: 'video' }
+                }
+            }
+        }
+    }
+};
+
+let currentPath = [];
+
+function openMyFiles() {
+    currentPath = ['My Files'];
+    renderFileExplorer();
+}
+
+function openMusic() {
+    currentPath = ['My Files', 'audio'];
+    renderFileExplorer();
+}
+
+function openPhotos() {
+    currentPath = ['My Files', 'images'];
+    renderFileExplorer();
+}
+
+function openVideos() {
+    currentPath = ['My Files', 'videos'];
+    renderFileExplorer();
+}
+
+function renderFileExplorer() {
+    const fileExplorer = document.getElementById('fileExplorer');
+    const explorerContent = document.getElementById('explorerContent');
+    const explorerTitle = document.getElementById('explorerTitle');
+    const breadcrumb = document.getElementById('breadcrumb');
+    const backButton = document.getElementById('backButton');
+    
+    // Update title and breadcrumb
+    explorerTitle.textContent = currentPath[currentPath.length - 1] || 'My Files';
+    breadcrumb.textContent = currentPath.join(' > ');
+    
+    // Enable/disable back button
+    backButton.disabled = currentPath.length <= 1;
+    
+    // Get current directory - need to traverse through children
+    let currentDir = fileSystem[currentPath[0]]; // Start with 'My Files'
+    for (let i = 1; i < currentPath.length; i++) {
+        if (currentDir && currentDir.children) {
+            currentDir = currentDir.children[currentPath[i]];
+        }
+    }
+    
+    // Clear content
+    explorerContent.innerHTML = '';
+    
+    // Render folders and files
+    if (currentDir && currentDir.children) {
+        Object.keys(currentDir.children).forEach(name => {
+            const item = currentDir.children[name];
+            const itemEl = document.createElement('div');
+            itemEl.className = item.type === 'folder' ? 'folder-item' : 'file-item';
+            
+            const icon = document.createElement('div');
+            icon.className = item.type === 'folder' ? 'folder-icon' : 'file-icon';
+            icon.textContent = item.type === 'folder' ? '📁' : getFileIcon(name, item.category);
+            
+            const nameEl = document.createElement('div');
+            nameEl.className = item.type === 'folder' ? 'folder-name' : 'file-name';
+            nameEl.textContent = name;
+            
+            itemEl.appendChild(icon);
+            itemEl.appendChild(nameEl);
+            
+            // Click handler
+            itemEl.addEventListener('click', () => {
+                if (item.type === 'folder') {
+                    currentPath.push(name);
+                    renderFileExplorer();
+                } else {
+                    openFile(name, item.category);
+                }
+            });
+            
+            explorerContent.appendChild(itemEl);
+        });
+    }
+    
+    fileExplorer.classList.remove('hidden');
+}
+
+function getFileIcon(filename, category) {
+    if (category === 'audio') return '🎵';
+    if (category === 'video') return '🎬';
+    if (category === 'image') return '🖼️';
+    return '📄';
+}
+
+function navigateBack() {
+    if (currentPath.length > 1) {
+        currentPath.pop();
+        renderFileExplorer();
+    }
+}
+
+function openFile(filename, category) {
+    const mediaViewer = document.getElementById('mediaViewer');
+    const viewerContent = document.getElementById('viewerContent');
+    const viewerTitle = document.getElementById('viewerTitle');
+    const audioControls = document.getElementById('audioControls');
+    
+    viewerTitle.textContent = filename;
+    viewerContent.innerHTML = '';
+    
+    // Construct file path
+    const folderPath = currentPath.slice(1).join('/');
+    const filePath = folderPath ? `${folderPath}/${filename}` : filename;
+    
+    if (category === 'image') {
+        const img = document.createElement('img');
+        img.src = filePath;
+        img.alt = filename;
+        viewerContent.appendChild(img);
+        audioControls.classList.add('hidden');
+    } else if (category === 'video') {
+        const video = document.createElement('video');
+        video.controls = true;
+        video.autoplay = true;
+        const source = document.createElement('source');
+        source.src = filePath;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        viewerContent.appendChild(video);
+        audioControls.classList.add('hidden');
+    } else if (category === 'audio') {
+        // Create custom audio player
+        const audioEl = document.createElement('audio');
+        audioEl.src = filePath;
+        audioEl.id = 'viewerAudio';
+        viewerContent.appendChild(audioEl);
+        
+        // Show large music visualizer
+        const visualizer = document.createElement('div');
+        visualizer.style.cssText = 'font-size: 120px; color: #ff69b4; animation: musicalNote 2s ease-in-out infinite;';
+        visualizer.textContent = '♪';
+        viewerContent.appendChild(visualizer);
+        
+        audioControls.classList.remove('hidden');
+        initAudioPlayer(audioEl);
+    }
+    
+    mediaViewer.classList.remove('hidden');
+}
+
+function initAudioPlayer(audioEl) {
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progressContainer = document.querySelector('.progress-container');
+    const progressBar = document.getElementById('progressBar');
+    const timeDisplay = document.getElementById('timeDisplay');
+    
+    // Play/Pause
+    playPauseBtn.onclick = () => {
+        if (audioEl.paused) {
+            audioEl.play();
+            playPauseBtn.textContent = '⏸';
+        } else {
+            audioEl.pause();
+            playPauseBtn.textContent = '▶';
+        }
+    };
+    
+    // Update progress
+    audioEl.ontimeupdate = () => {
+        const progress = (audioEl.currentTime / audioEl.duration) * 100;
+        progressBar.style.width = progress + '%';
+        
+        const currentMin = Math.floor(audioEl.currentTime / 60);
+        const currentSec = Math.floor(audioEl.currentTime % 60).toString().padStart(2, '0');
+        const totalMin = Math.floor(audioEl.duration / 60);
+        const totalSec = Math.floor(audioEl.duration % 60).toString().padStart(2, '0');
+        
+        timeDisplay.textContent = `${currentMin}:${currentSec} / ${totalMin}:${totalSec}`;
+    };
+    
+    // Seek
+    progressContainer.onclick = (e) => {
+        const rect = progressContainer.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        audioEl.currentTime = percent * audioEl.duration;
+    };
+    
+    // Auto-play
+    audioEl.play();
+    playPauseBtn.textContent = '⏸';
+}
 
 // Handle audio autoplay restrictions
 document.addEventListener('click', function enableAudio() {

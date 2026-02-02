@@ -9,10 +9,57 @@
 </head>
 
 <body>
+    <!-- Desktop Container -->
+    <div id="desktop" class="desktop-container">
+        <div class="desktop-wallpaper">
+            <!-- Desktop Icons -->
+            <div class="desktop-icons">
+                <div class="desktop-icon" id="valentineGameIcon">
+                    <div class="icon-image">💕</div>
+                    <div class="icon-label">Be Mine.exe</div>
+                </div>
+                <div class="desktop-icon">
+                    <div class="icon-image">📁</div>
+                    <div class="icon-label">My Files</div>
+                </div>
+                <div class="desktop-icon">
+                    <div class="icon-image">🎵</div>
+                    <div class="icon-label">Music</div>
+                </div>
+                <div class="desktop-icon">
+                    <div class="icon-image">🖼️</div>
+                    <div class="icon-label">Photos</div>
+                </div>
+                <div class="desktop-icon">
+                    <div class="icon-image">🎬</div>
+                    <div class="icon-label">Videos</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Taskbar -->
+        <div class="taskbar">
+            <div class="start-button">
+                <span class="start-icon">❖</span>
+                <span class="start-text">Start</span>
+            </div>
+            <div class="taskbar-time" id="taskbarTime">12:00</div>
+        </div>
+    </div>
+
     <!-- Game Container -->
-    <div id="gameWindow">
+    <div id="gameWindow" class="hidden">
+        <div id="windowCloseBtn" class="window-close-button"></div>
+        <!-- Intro Screen -->
+        <div id="introScreen" class="screen active">
+            <div class="intro-container">
+                <div id="studioLogo" class="studio-logo hidden">GWABABA<br>GAME STUDIOS</div>
+                <div id="presentsText" class="presents-text hidden">PRESENTS</div>
+            </div>
+        </div>
+
         <!-- Start Screen -->
-        <div id="startScreen" class="screen active">
+        <div id="startScreen" class="screen">
             <div class="hearts-background"></div>
             <h1 class="game-title">BE MINE?</h1>
             <button id="startButton" class="pixel-button start-btn">
@@ -47,6 +94,8 @@
                         data-object="plushies">
                     <img src="images/gregory-grasshopper.png" alt="Gregory the Grasshopper" class="clickable-object" id="gregoryGrasshopper"
                         data-object="gregory">
+                    <img src="images/photo-album.png" alt="Photo Album" class="clickable-object" id="photoAlbum"
+                        data-object="album">
                 </div>
             </div>
         </div>
@@ -129,7 +178,31 @@
             <div class="focus-content">
                 <img id="focusedItem" src="" alt="Focused Item" class="focused-item-image">
                 <div class="focus-message" id="focusMessage"></div>
-                <button id="closeFocusButton" class="pixel-button close-focus-btn">Back</button>
+                <div class="focus-buttons">
+                    <button id="closeFocusButton" class="pixel-button close-focus-btn">Back</button>
+                    <button id="openAlbumButton" class="pixel-button open-album-btn hidden">Open Album</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Album Viewer -->
+        <div id="albumViewer" class="album-viewer hidden">
+            <div class="album-content">
+                <img id="albumBook" src="images/photo-album-open.png" alt="Open Photo Album" class="album-book-image">
+                <div class="album-pages">
+                    <div class="album-page left-page">
+                        <img id="leftPageImage" src="" alt="Left Page Photo">
+                    </div>
+                    <div class="album-page right-page">
+                        <img id="rightPageImage" src="" alt="Right Page Photo">
+                    </div>
+                </div>
+                <div class="album-nav">
+                    <button id="prevPageBtn" class="pixel-button album-nav-btn">◀ Prev</button>
+                    <span id="pageIndicator" class="page-indicator">Page 1</span>
+                    <button id="nextPageBtn" class="pixel-button album-nav-btn">Next ▶</button>
+                </div>
+                <button id="closeAlbumBtn" class="pixel-button close-album-btn">Close Album</button>
             </div>
         </div>
 
@@ -149,11 +222,42 @@
             </button>
         </div>
     </div>
+    <!-- File Explorer Window -->
+    <div id="fileExplorer" class="file-explorer-window hidden">
+        <div class="explorer-titlebar">
+            <span id="explorerTitle" class="explorer-title">My Files</span>
+            <div id="explorerCloseBtn" class="window-close-button"></div>
+        </div>
+        <div class="explorer-toolbar">
+            <button id="backButton" class="toolbar-button">◀ Back</button>
+            <div id="breadcrumb" class="breadcrumb">Home</div>
+        </div>
+        <div id="explorerContent" class="explorer-content">
+            <!-- Files and folders will be dynamically inserted here -->
+        </div>
+    </div>
 
+    <!-- Media Viewer Window -->
+    <div id="mediaViewer" class="media-viewer-window hidden">
+        <div class="viewer-titlebar">
+            <span id="viewerTitle" class="viewer-title">Media Viewer</span>
+            <div id="viewerCloseBtn" class="window-close-button"></div>
+        </div>
+        <div id="viewerContent" class="viewer-content">
+            <!-- Media content will be dynamically inserted here -->
+        </div>
+        <div id="audioControls" class="audio-controls hidden">
+            <button id="playPauseBtn" class="control-button">▶</button>
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <span id="timeDisplay" class="time-display">0:00 / 0:00</span>
+        </div>
+    </div>
     </div>
 
     <!-- Audio Elements -->
-    <audio id="startJazz" loop autoplay>
+    <audio id="startJazz" loop>
         <source src="audio/smooth-jazz-start.mp3" type="audio/mp3">
     </audio>
     <audio id="mainJazz" loop>
