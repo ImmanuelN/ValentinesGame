@@ -1,3 +1,49 @@
+// Image Preloader - Load all images when page starts
+const imagesToPreload = [
+    'images/celebration.png',
+    'images/chocolates.png',
+    'images/flowers.png',
+    'images/gregory-grasshopper.png',
+    'images/gregory-watch.png',
+    'images/imms-both-gifts.png',
+    'images/imms-character-sad.png',
+    'images/imms-character.png',
+    'images/imms-flowers.png',
+    'images/photo-album-open.png',
+    'images/photo-album.png',
+    'images/picture-frame.png',
+    'images/plushies.png',
+    'images/room-background.png',
+    'images/sad-bridge.png',
+    'images/teddy-bear.png',
+    'images/us-1.png',
+    'images/us-2.png',
+    'images/us-3.png',
+    'images/Us-4.png',
+    'images/us-5.png',
+    'images/us-6.png',
+    'images/us-7.png',
+    'images/us-8.png',
+    'images/us-9.png',
+    'images/us-10.png',
+    'images/us-11.png',
+    'images/us-12.png',
+    'images/us-13.png'
+];
+
+const preloadedImages = [];
+
+function preloadImages() {
+    imagesToPreload.forEach(src => {
+        const img = new Image();
+        img.src = src;
+        preloadedImages.push(img);
+    });
+}
+
+// Start preloading immediately
+preloadImages();
+
 // Game State
 const gameState = {
     playerName: '',
